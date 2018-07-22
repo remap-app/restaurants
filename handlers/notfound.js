@@ -1,2 +1,4 @@
 const { send } = require('micro')
-module.exports = (req, res) => send(res, 404, '404 Not found')
+const status = require('statuses')
+
+module.exports = (req, res) => send(res, 404, { error: status[404] })

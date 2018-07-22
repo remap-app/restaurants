@@ -1,13 +1,16 @@
 const { parse: parseUrl } = require('url')
 const { send } = require('micro')
-const hotpepper = require('../externals/hotpepper')
-const gnavi = require('../externals/gnavi')
+const { hotpepper, gurunavi } = require('../externals')
 
 module.exports = async (req, res) => {
   const { query } = parseUrl(req.url, true)
-  const results = await Promise.all([
-    hotpepper(query),
-    gnavi(query),
-  ])
-  send(res, 200, results)
+  try {
+    const results = await Promise.all([
+      hotpepper(query),
+      gurunavi(query),
+    ])
+    send(res, 200, results)
+  } catch (e) {
+    send(res, e.statusCode, { ...e.properties, error: e.message })
+  }
 }
