@@ -842,6 +842,10 @@ lodash.flatten@^4.4.0:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/lodash.flatten/-/lodash.flatten-4.4.0.tgz#f31c22225a9632d2bbf8e4addbef240aa765a61f"
 
+lodash.head@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/lodash.head/-/lodash.head-4.0.1.tgz#e2aa322d3ec40cd6aae186082977d993b354ed9c"
+
 lodash.mapkeys@^4.6.0:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/lodash.mapkeys/-/lodash.mapkeys-4.6.0.tgz#df2cfa231d7c57c7a8ad003abdad5d73d3ea5195"

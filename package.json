@@ -1,8 +1,8 @@
 {
-  "name": "restraunts",
+  "name": "restaurants",
   "private": true,
   "version": "0.0.0",
-  "description": "ReMap Restraunts API Microservice",
+  "description": "ReMap Restaurants API Microservice",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -11,18 +11,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/remap-app/restraunts.git"
+    "url": "git+https://github.com/remap-app/restaurants.git"
   },
   "author": "Shingo Sato",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/remap-app/restraunts/issues"
+    "url": "https://github.com/remap-app/restaurants/issues"
   },
-  "homepage": "https://github.com/remap-app/restraunts#readme",
+  "homepage": "https://github.com/remap-app/restaurants#readme",
   "dependencies": {
     "dotenv": "^6.0.0",
     "http-errors": "^1.6.3",
     "lodash.flatten": "^4.4.0",
+    "lodash.head": "^4.0.1",
     "lodash.mapkeys": "^4.6.0",
     "lodash.uniqwith": "^4.5.0",
     "micro": "^9.3.2",

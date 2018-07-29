@@ -1,10 +1,10 @@
-# restraunts
+# restaurants
 
-ReMap Restraunts API Microservice
+ReMap Restaurants API Microservice
 
 ## Endpoints
 
-### Restraunts
+### Restaurants
 
 ```http
 GET /
@@ -16,3 +16,9 @@ GET /
 - longitude
 - page
 - per_page
+
+### Restaurant
+
+```http
+GET /:id
+```
