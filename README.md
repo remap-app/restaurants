@@ -14,6 +14,7 @@ GET /
 
 - latitude
 - longitude
+- range
 - page
 - per_page
 
