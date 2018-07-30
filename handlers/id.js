@@ -15,13 +15,12 @@ module.exports = async (req, res) => {
   }
   try {
     const result = await endpoint({ ...query, id })
-
-    // Hotpepper
-    if (Array.isArray(result) && result.length === 0) {
+    const ret = Array.isArray(result) ? head(result) : result
+    if (!ret) {
       send(res, 404, { error: status[404] })
       return
     }
-    send(res, 200, Array.isArray(result) ? head(result) : result)
+    send(res, 200, ret)
   } catch (e) {
     send(res, e.statusCode, { ...e.properties, error: e.message })
   }

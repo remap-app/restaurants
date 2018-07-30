@@ -3,7 +3,7 @@ const { send } = require('micro')
 const flatten = require('lodash.flatten')
 const mapKeys = require('lodash.mapkeys')
 const { hotpepper, gurunavi } = require('../externals')
-const uniqRestaurants = require('../uniq-restaurants')
+const { uniqRestaurants } = require('../helpers')
 
 module.exports = async (req, res) => {
   const query = { page: 1, per_page: 10, range: 1, ...parseUrl(req.url, true).query }

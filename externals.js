@@ -1,7 +1,8 @@
 const querystring = require('querystring')
 const fetch = require('node-fetch')
 const createError = require('http-errors')
-const mapParamsKeys = require('./map-params-keys')
+const { mapKeysWith } = require('./utils')
+const { hotpepper: hotpepperParamsMap, gurunavi: gurunaviParamsMap } = require('./params-map')
 
 const stringifyParams = params => {
   const s = querystring.stringify(params)
@@ -18,12 +19,7 @@ const request = module.exports.request = async (url, params) => {
 
 module.exports.hotpepper = async params => {
   const { results } = await request('https://webservice.recruit.co.jp/hotpepper/gourmet/v1/', {
-    ...mapParamsKeys(params || {}, {
-      latitude: 'lat',
-      longitude: 'lng',
-      page: 'start',
-      per_page: 'count',
-    }),
+    ...mapKeysWith(params || {}, hotpepperParamsMap),
     key: process.env.HOTPEPPER_API_KEY,
     format: 'json',
   })
@@ -31,16 +27,12 @@ module.exports.hotpepper = async params => {
     const [error] = results.error
     throw createError({ '3000': 400, '2000': 401, '1000': 500 }[error.code], error.message)
   }
-  console.log('results', results);
   return results.shop
 }
 
 module.exports.gurunavi = async params => {
   const res = await request('https://api.gnavi.co.jp/RestSearchAPI/20150630/', {
-    ...mapParamsKeys(params || {}, {
-      page: 'offset_page',
-      per_page: 'hit_per_page',
-    }),
+    ...mapKeysWith(params || {}, gurunaviParamsMap),
     keyid: process.env.GURUNAVI_API_KEY,
     format: 'json',
   })
