@@ -1,12 +1,12 @@
 require('dotenv').config()
 
-const { router, get } = require('microrouter')
+const { router, get, send } = require('microrouter')
+const status = require('statuses')
 const rootHandler = require('./handlers/root')
 const idHandler = require('./handlers/id')
-const notfound = require('./handlers/notfound')
 
 module.exports = router(
   get('/', rootHandler),
   get('/:id', idHandler),
-  get('/*', notfound)
+  get('/*', (req, res) => send(res, 404, { error: status[404] }))
 )

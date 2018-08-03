@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "micro",
+    "start": "micro -l tcp://0.0.0.0:${PORT}",
     "dev": "micro-dev"
   },
   "repository": {
@@ -19,6 +19,11 @@
     "url": "https://github.com/remap-app/restaurants/issues"
   },
   "homepage": "https://github.com/remap-app/restaurants#readme",
+  "engines": {
+    "node": "8.11.3",
+    "npm": "6.3.0",
+    "yarn": "1.9.2"
+  },
   "dependencies": {
     "dotenv": "^6.0.0",
     "http-errors": "^1.6.3",
