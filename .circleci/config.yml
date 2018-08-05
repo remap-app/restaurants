@@ -41,10 +41,10 @@ jobs:
     steps:
       - checkout
       - run: curl -sL http://ibm.biz/idt-installer | bash
-      - run: bx cf api https://api.ng.bluemix.net
-      - run: bx cf login -u ${BLUEMIX_USER} -p ${BLUEMIX_PASSWORD}
-      - run: bx cf target -o ${BLUEMIX_ORG} -s ${BLUEMIX_SPACE}
-      - run: bx cf push ${APP_NAME}-${CIRCLE_BRANCH##*/}
+      - run: bx api https://api.ng.bluemix.net
+      - run: bx login -u ${BLUEMIX_USER} -p ${BLUEMIX_PASSWORD}
+      - run: bx target -o ${BLUEMIX_ORG} -s ${BLUEMIX_SPACE}
+      - run: bx app push ${APP_NAME}-${CIRCLE_BRANCH##*/}
 
 workflows:
   version: 2
