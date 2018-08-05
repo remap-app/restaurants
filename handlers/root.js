@@ -1,7 +1,6 @@
 const { parse: parseUrl } = require('url')
 const { send } = require('micro')
 const flatten = require('lodash.flatten')
-const mapKeys = require('lodash.mapkeys')
 const { hotpepper, gurunavi } = require('../externals')
 const { uniqRestaurants } = require('../helpers')
 
