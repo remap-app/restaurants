@@ -33,6 +33,8 @@
     "lodash.mapkeys": "^4.6.0",
     "lodash.uniqwith": "^4.5.0",
     "micro": "^9.3.2",
+    "micro-compose": "^0.0.3",
+    "micro-cors-multiple-allow-origin": "^1.0.1",
     "microrouter": "^3.1.3",
     "node-fetch": "^2.1.2",
     "statuses": "^1.5.0"
