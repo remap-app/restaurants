@@ -10,18 +10,18 @@ module.exports = async (req, res) => {
   const { id } = req.params
   const endpoint = isHotpepper(id) ? hotpepper : (isGurunavi(id) ? gurunavi : null)
   if (!endpoint) {
-    send(res, 404, { error: status[404] })
+    send(res, 404, { error: status[404], status: 404 })
     return
   }
   try {
     const result = await endpoint({ ...query, id })
     const ret = Array.isArray(result) ? head(result) : result
     if (!ret) {
-      send(res, 404, { error: status[404] })
+      send(res, 404, { error: status[404], status: 404 })
       return
     }
     send(res, 200, ret)
   } catch (e) {
-    send(res, e.statusCode, { ...e.properties, error: e.message })
+    send(res, e.statusCode, { ...e.properties, error: e.message, status: e.statusCode })
   }
 }
