@@ -16,6 +16,6 @@ module.exports = async (req, res) => {
     )
     send(res, 200, ret)
   } catch (e) {
-    send(res, e.statusCode, { ...e.properties, error: e.message })
+    send(res, e.statusCode, { ...e.properties, error: e.message, status: e.statusCode })
   }
 }
