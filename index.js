@@ -16,6 +16,6 @@ module.exports = compose(
   router(
     get('/', rootHandler),
     get('/:id', idHandler),
-    get('/*', (req, res) => send(res, 404, { error: status[404] }))
+    get('/*', (req, res) => send(res, 404, { error: status[404], status: 404 }))
   )
 )
