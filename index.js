@@ -1,13 +1,15 @@
 require('dotenv').config()
 
-const { router, get, send } = require('microrouter')
+const { router, get } = require('microrouter')
 const compose = require('micro-compose')
+const { handleErrors, createError } = require('micro-errors')
 const cors = require('micro-cors-multiple-allow-origin')
-const status = require('statuses')
+const statuses = require('statuses')
 const rootHandler = require('./handlers/root')
 const idHandler = require('./handlers/id')
 
 module.exports = compose(
+  handleErrors({ debug: process.env.NODE_ENV !== 'production' }),
   cors({
     allowMethods: ['GET', 'OPTIONS'],
     origin: process.env.CORS_ALLOWED_ORIGINS.split(','),
@@ -16,6 +18,8 @@ module.exports = compose(
   router(
     get('/', rootHandler),
     get('/:id', idHandler),
-    get('/*', (req, res) => send(res, 404, { error: status[404], status: 404 }))
+    get('/*', () => {
+      throw createError(404, statuses[404])
+    })
   )
 )
