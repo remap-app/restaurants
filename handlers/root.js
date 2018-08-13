@@ -6,16 +6,18 @@ const { uniqRestaurants } = require('../helpers')
 
 module.exports = async (req, res) => {
   const query = { page: 1, per_page: 10, range: 1, ...parseUrl(req.url, true).query }
-  try {
-    const results = await Promise.all([
-      hotpepper({ ...query, datum: 'world' }),
-      gurunavi({ ...query, input_coordinates_mode: 2, coordinates_mode: 2 }),
-    ])
+  const results = await Promise.all([
+    hotpepper({ ...query, datum: 'world' }),
+    gurunavi({ ...query, input_coordinates_mode: 2, coordinates_mode: 2 }),
+  ])
+  .catch(error => {
+    throw error
+  })
+
+  if (results) {
     const ret = uniqRestaurants(
       flatten(results)
     )
     send(res, 200, ret)
-  } catch (e) {
-    send(res, e.statusCode, { ...e.properties, error: e.message, status: e.statusCode })
   }
 }
