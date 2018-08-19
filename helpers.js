@@ -12,13 +12,18 @@ module.exports.uniqRestaurants = restaurants => uniqWith(restaurants, (a, b) => 
   const bLng = b && (b.lng || b.longitude)
   return aLat === bLat && aLng === bLng
 })
+
 module.exports.isHotpepper = id => /^J\d{9}$/.test(id)
+
 module.exports.isGurunavi = id => /^[a-zA-z0-9]{7}$/.test(id)
+
+const truthy = v => !!v
 
 const mapEntity = (entity, map) => {
   return Object.entries(map).reduce(
     (ret, [key, value]) => {
       let resultVal = null
+
       if (value === true) {
         const path = key
         resultVal = get(entity, path, null)
@@ -26,15 +31,16 @@ const mapEntity = (entity, map) => {
         const result = value.split(',').map(path => get(entity, path, ''))
         resultVal = result.length === 1
           ? head(result)
-          : result.filter(r => !!r).join(' ')
+          : result.filter(truthy).join(' ')
       } else if (Array.isArray(value)) {
-        resultVal = value.map(path => get(entity, path, null))
+        resultVal = value.map(path => get(entity, path, null)).filter(truthy)
       } else if (isPlainObject(value)) {
         resultVal = Object.entries(value).reduce(
           (ret, [k, path]) => ({ ...ret, [k]: get(entity, path, null) }),
           {}
         )
       }
+
       return { ...ret, [key]: resultVal }
     },
     {}
