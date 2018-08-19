@@ -11,7 +11,7 @@ module.exports = async (req, res) => {
   const { id } = req.params
   const endpoint = isHotpepper(id) ? hotpepper : (isGurunavi(id) ? gurunavi : null)
   if (!endpoint) {
-    throw createError(404, statuses[404], null, { detail: 'Invalid ID format' })
+    throw createError(404, statuses[404], null, null, { detail: 'Invalid ID format' })
   }
 
   const result = await endpoint({ ...query, id }).catch(error => {
