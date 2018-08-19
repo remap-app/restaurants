@@ -25,6 +25,7 @@ module.exports.hotpepper = async params => {
       statusCode,
       statuses[statusCode],
       null,
+      null,
       { detail: error.message }
     )
   }
@@ -43,6 +44,7 @@ module.exports.gurunavi = async params => {
     throw createError(
       statusCode,
       statuses[statusCode],
+      null,
       null,
       { detail: error.message }
     )
