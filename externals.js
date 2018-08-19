@@ -2,7 +2,9 @@ const { STATUS_CODES } = require('http')
 const fetch = require('node-fetch')
 const { createError } = require('micro-errors')
 const { mapKeysWith, stringifyParams } = require('./utils')
+const { normalizeRestaurants, normalizeNullValues } = require('./helpers')
 const { hotpepper: hotpepperParamsMap, gurunavi: gurunaviParamsMap } = require('./params-map')
+const { hotpepper: hotpepperEntityMap, gurunavi: gurunaviEntityMap } = require('./entity-map')
 
 const request = module.exports.request = async (url, params) => {
   const res = await fetch(`${url}${stringifyParams(params)}`)
@@ -18,6 +20,7 @@ module.exports.hotpepper = async params => {
     key: process.env.HOTPEPPER_API_KEY,
     format: 'json',
   })
+
   if (Array.isArray(results.error)) {
     const [error] = results.error
     const statusCode = { '3000': 400, '2000': 401, '1000': 500 }[error.code]
@@ -29,7 +32,8 @@ module.exports.hotpepper = async params => {
       { detail: error.message }
     )
   }
-  return results.shop
+
+  return normalizeRestaurants(results.shop, hotpepperEntityMap)
 }
 
 module.exports.gurunavi = async params => {
@@ -38,6 +42,7 @@ module.exports.gurunavi = async params => {
     keyid: process.env.GURUNAVI_API_KEY,
     format: 'json',
   })
+
   if (res.error) {
     const { error } = res
     const statusCode = { '600': 404, '601': 401, '602': 404, '603': 400, '604': 500 }[error.code] || error.code
@@ -49,5 +54,9 @@ module.exports.gurunavi = async params => {
       { detail: error.message }
     )
   }
-  return res.rest
+
+  return normalizeRestaurants(
+    normalizeNullValues(res.rest),
+    gurunaviEntityMap
+  )
 }
