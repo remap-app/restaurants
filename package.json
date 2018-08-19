@@ -2,7 +2,7 @@
   "name": "restaurants",
   "private": true,
   "version": "0.0.0",
-  "description": "ReMap Restaurants API Microservice",
+  "description": "ReMap Restaurants Microservice",
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
@@ -37,7 +37,8 @@
     "micro-errors": "^2.0.0",
     "microrouter": "^3.1.3",
     "node-fetch": "^2.2.0",
-    "statuses": "^1.5.0"
+    "statuses": "^1.5.0",
+    "url-pattern": "^1.0.3"
   },
   "devDependencies": {
     "ava": "^1.0.0-beta.6",
