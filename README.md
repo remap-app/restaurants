@@ -24,7 +24,7 @@ interface IResponse {
   tel?: string;
   opening_times?: string;
   catchphrase?: string;
-  description: string;
+  description?: string;
   access?: string;
   holiday?: string;
   credit_card?: string;
