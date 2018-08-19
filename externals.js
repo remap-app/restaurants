@@ -1,6 +1,6 @@
+const { STATUS_CODES } = require('http')
 const fetch = require('node-fetch')
 const { createError } = require('micro-errors')
-const statuses = require('statuses')
 const { mapKeysWith, stringifyParams } = require('./utils')
 const { hotpepper: hotpepperParamsMap, gurunavi: gurunaviParamsMap } = require('./params-map')
 
@@ -9,7 +9,7 @@ const request = module.exports.request = async (url, params) => {
   if (res.ok) {
     return await res.json()
   }
-  throw createError(res.status, statuses[res.status])
+  throw createError(res.status, STATUS_CODES[res.status])
 }
 
 module.exports.hotpepper = async params => {
@@ -23,7 +23,8 @@ module.exports.hotpepper = async params => {
     const statusCode = { '3000': 400, '2000': 401, '1000': 500 }[error.code]
     throw createError(
       statusCode,
-      statuses[statusCode],
+      STATUS_CODES[statusCode],
+      null,
       null,
       { detail: error.message }
     )
@@ -42,7 +43,8 @@ module.exports.gurunavi = async params => {
     const statusCode = { '600': 404, '601': 401, '602': 404, '603': 400, '604': 500 }[error.code] || error.code
     throw createError(
       statusCode,
-      statuses[statusCode],
+      STATUS_CODES[statusCode],
+      null,
       null,
       { detail: error.message }
     )
