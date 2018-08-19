@@ -1,7 +1,7 @@
+const { STATUS_CODES } = require('http')
 const { parse: parseUrl } = require('url')
 const { send } = require('micro')
 const { createError } = require('micro-errors')
-const statuses = require('statuses')
 const head = require('lodash.head')
 const { hotpepper, gurunavi } = require('../externals')
 const { isHotpepper, isGurunavi } = require('../helpers')
@@ -11,7 +11,7 @@ module.exports = async (req, res) => {
   const { id } = req.params
   const endpoint = isHotpepper(id) ? hotpepper : (isGurunavi(id) ? gurunavi : null)
   if (!endpoint) {
-    throw createError(404, statuses[404], null, null, { detail: 'Invalid ID format' })
+    throw createError(404, STATUS_CODES[404], null, null, { detail: 'Invalid ID format' })
   }
 
   const result = await endpoint({ ...query, id }).catch(error => {
@@ -20,7 +20,7 @@ module.exports = async (req, res) => {
   const ret = Array.isArray(result) ? head(result) : result
 
   if (!ret) {
-    throw createError(404, statuses[404])
+    throw createError(404, STATUS_CODES[404])
   }
 
   send(res, 200, ret)
