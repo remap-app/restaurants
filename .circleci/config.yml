@@ -3,7 +3,7 @@ version: 2
 references:
   container_base_config: &container_base_config
     docker:
-      - image: circleci/node:8.11.3
+      - image: circleci/node:10.9.0
     working_directory: ~/restaurants
   restore_yarn_cache: &restore_yarn_cache
     name: Restoring Cache - yarn
