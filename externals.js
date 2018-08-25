@@ -6,12 +6,16 @@ const { normalizeRestaurants, normalizeNullValues } = require('./helpers')
 const { hotpepper: hotpepperParamsMap, gurunavi: gurunaviParamsMap } = require('./params-map')
 const { hotpepper: hotpepperEntityMap, gurunavi: gurunaviEntityMap } = require('./entity-map')
 
+const throwInternalServerError = error => {
+  throw createError(500, STATUS_CODES[500], error)
+}
+
 const request = module.exports.request = async (url, params) => {
   const res = await fetch(`${url}${stringifyParams(params)}`)
   if (res.ok) {
-    return await res.json()
+    return await res.json().catch(throwInternalServerError)
   }
-  throw createError(res.status, STATUS_CODES[res.status])
+  throw createError(res.status, STATUS_CODES[res.status], null, { statusText: res.statusText })
 }
 
 module.exports.hotpepper = async params => {
