@@ -1,21 +1,22 @@
 const { STATUS_CODES } = require('http')
-const fetch = require('node-fetch')
+const got = require('got')
 const { createError } = require('micro-errors')
 const { mapKeysWith, stringifyParams } = require('./utils')
 const { normalizeRestaurants, normalizeNullValues } = require('./helpers')
 const { hotpepper: hotpepperParamsMap, gurunavi: gurunaviParamsMap } = require('./params-map')
 const { hotpepper: hotpepperEntityMap, gurunavi: gurunaviEntityMap } = require('./entity-map')
 
-const throwInternalServerError = error => {
-  throw createError(500, STATUS_CODES[500], error)
-}
-
 const request = module.exports.request = async (url, params) => {
-  const res = await fetch(`${url}${stringifyParams(params)}`)
-  if (res.ok) {
-    return await res.json().catch(throwInternalServerError)
-  }
-  throw createError(res.status, STATUS_CODES[res.status], null, { statusText: res.statusText })
+  const response = await got(`${url}${stringifyParams(params)}`, { json: true })
+    .catch(error => {
+      const codeAndTitle = error.name === 'ParseError'
+        ? [500, STATUS_CODES[500]]
+        : [error.statusCode, error.statusMessage]
+
+      throw createError(...codeAndTitle, error, { name: error.name })
+    })
+
+  return response.body
 }
 
 module.exports.hotpepper = async params => {
