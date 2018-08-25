@@ -21,9 +21,9 @@
   },
   "homepage": "https://github.com/remap-app/restaurants#readme",
   "engines": {
-    "node": "8.11.x",
+    "node": "10.9.x",
     "npm": "6.x.x",
-    "yarn": "1.x.x"
+    "yarn": "1.9.x"
   },
   "dependencies": {
     "dotenv": "^6.0.0",
