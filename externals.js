@@ -1,13 +1,16 @@
 const { STATUS_CODES } = require('http')
 const got = require('got')
+const KeyvRedis = require('@keyv/redis')
 const { createError } = require('micro-errors')
 const { mapKeysWith, stringifyParams } = require('./utils')
 const { normalizeRestaurants, normalizeNullValues } = require('./helpers')
 const { hotpepper: hotpepperParamsMap, gurunavi: gurunaviParamsMap } = require('./params-map')
 const { hotpepper: hotpepperEntityMap, gurunavi: gurunaviEntityMap } = require('./entity-map')
 
+const redis = new KeyvRedis(process.env.CACHE_DATABASE_URL)
+
 const request = module.exports.request = async (url, params) => {
-  const response = await got(`${url}${stringifyParams(params)}`, { json: true })
+  const response = await got(`${url}${stringifyParams(params)}`, { json: true, cache: redis })
     .catch(error => {
       const codeAndTitle = error.name === 'ParseError'
         ? [500, STATUS_CODES[500]]
