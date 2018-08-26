@@ -7,7 +7,7 @@ const { normalizeRestaurants, normalizeNullValues } = require('./helpers')
 const { hotpepper: hotpepperParamsMap, gurunavi: gurunaviParamsMap } = require('./params-map')
 const { hotpepper: hotpepperEntityMap, gurunavi: gurunaviEntityMap } = require('./entity-map')
 
-const request = module.exports.request = async (url, params) => {
+const request = async (url, params) => {
   const response = await got(`${url}${stringifyParams(params)}`, { json: true, cache: cacheStore })
     .catch(error => {
       const codeAndTitle = error.name === 'ParseError'
@@ -42,6 +42,10 @@ module.exports.hotpepper = async params => {
   return normalizeRestaurants(results.shop, hotpepperEntityMap)
 }
 
+const shouldHandleGurunaviError = error => {
+  return !!error && [429, 601, 602, 603, 604].includes(error.code)
+}
+
 module.exports.gurunavi = async params => {
   const res = await request('https://api.gnavi.co.jp/RestSearchAPI/20150630/', {
     ...mapKeysWith(params || {}, gurunaviParamsMap),
@@ -49,9 +53,9 @@ module.exports.gurunavi = async params => {
     format: 'json',
   })
 
-  if (res.error) {
+  if (shouldHandleGurunaviError(res.error)) {
     const { error } = res
-    const statusCode = { '600': 404, '601': 401, '602': 404, '603': 400, '604': 500 }[error.code] || error.code
+    const statusCode = { '601': 401, '602': 404, '603': 400, '604': 500 }[error.code] || error.code
     throw createError(
       statusCode,
       STATUS_CODES[statusCode],
@@ -61,8 +65,9 @@ module.exports.gurunavi = async params => {
     )
   }
 
+  const restaurants = res.rest || [] // if error become undefined
   return normalizeRestaurants(
-    normalizeNullValues(res.rest),
+    normalizeNullValues(restaurants),
     gurunaviEntityMap
   )
 }
