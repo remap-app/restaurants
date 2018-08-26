@@ -14,7 +14,7 @@ const request = module.exports.request = async (url, params) => {
         ? [500, STATUS_CODES[500]]
         : [error.statusCode, error.statusMessage]
 
-      throw createError(...codeAndTitle, error, { name: error.name })
+      throw createError(...codeAndTitle, error, null, { name: error.name })
     })
 
   return response.body
