@@ -13,9 +13,9 @@ module.exports.uniqRestaurants = restaurants => uniqWith(restaurants, (a, b) => 
   return aLat === bLat && aLng === bLng
 })
 
-module.exports.isHotpepper = id => /^J\d{9}$/.test(id)
+const isHotpepper = module.exports.isHotpepper = id => /^J\d{9}$/.test(id)
 
-module.exports.isGurunavi = id => /^[a-zA-z0-9]{7}$/.test(id)
+const isGurunavi = module.exports.isGurunavi = id => /^[a-zA-z0-9]{7}$/.test(id)
 
 const truthy = v => !!v
 
@@ -70,3 +70,11 @@ module.exports.normalizeNullValues = restaurants => {
     ? restaurants.map(normalizeNullValue)
     : normalizeNullValue(restaurants)
 }
+
+const pickIdsWith = (ids, comparator, delimiter = ',') => {
+  return ids.split(delimiter).filter(comparator).join(delimiter)
+}
+
+module.exports.pickHotpepperIds = ids => pickIdsWith(ids, isHotpepper)
+
+module.exports.pickGurunaviIds = ids => pickIdsWith(ids, isGurunavi)
