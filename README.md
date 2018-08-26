@@ -39,7 +39,11 @@ interface IResponse {
 ### Restaurants
 
 ```http
-GET /
+GET /?latitude=${LATITUDE}&longitude=${LONGITUDE}
+```
+
+```http
+GET /?id=${ID_0},${ID_1}
 ```
 
 #### Query parameters
@@ -49,6 +53,7 @@ GET /
 - range
 - page
 - per_page
+- id
 
 ### Restaurant
 
