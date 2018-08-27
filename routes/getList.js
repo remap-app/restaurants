@@ -1,6 +1,5 @@
 const { STATUS_CODES } = require('http')
 const { parse: parseUrl } = require('url')
-const { send } = require('micro')
 const { createError } = require('micro-errors')
 const flatten = require('lodash.flatten')
 const { hotpepper, gurunavi } = require('../externals')
@@ -27,7 +26,7 @@ const externals = [
   },
 ]
 
-module.exports = async (req, res) => {
+module.exports = async req => {
   const query = createQuery(req.url)
 
   const requestPromises = externals.reduce(
@@ -50,8 +49,7 @@ module.exports = async (req, res) => {
 
   const results = await Promise.all(requestPromises).catch(error => { throw error })
 
-  const ret = uniqRestaurants(
+  return uniqRestaurants(
     flatten(results)
   )
-  send(res, 200, ret)
 }
