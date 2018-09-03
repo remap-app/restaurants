@@ -53,10 +53,9 @@ const shouldHandleGurunaviError = error => {
 }
 
 module.exports.gurunavi = async params => {
-  const res = await request('https://api.gnavi.co.jp/RestSearchAPI/20150630/', {
+  const res = await request('https://api.gnavi.co.jp/RestSearchAPI/v3/', {
     ...mapKeysWith(params || {}, gurunaviParamsMap),
     keyid: process.env.GURUNAVI_API_KEY,
-    format: 'json',
   })
 
   if (shouldHandleGurunaviError(res.error)) {
