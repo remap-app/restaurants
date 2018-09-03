@@ -2,6 +2,7 @@ const mapObj = require('map-obj')
 const uniqWith = require('lodash.uniqwith')
 const get = require('lodash.get')
 const isPlainObject = require('lodash.isplainobject')
+const isString = require('lodash.isstring')
 const isEmpty = require('lodash.isempty')
 const head = require('lodash.head')
 
@@ -60,7 +61,7 @@ module.exports.normalizeRestaurants = (restaurants, map) => {
 const normalizeNullValue = object => {
   return mapObj(
     object,
-    (key, value) => (isPlainObject(value) && isEmpty(value)) ? [key, null] : [key, value],
+    (key, value) => (isString(value) && isEmpty(value)) ? [key, null] : [key, value],
     { deep: true }
   )
 }
