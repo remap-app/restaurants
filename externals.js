@@ -21,11 +21,17 @@ const request = async (url, params) => {
 }
 
 module.exports.hotpepper = async params => {
-  const { results } = await request('https://webservice.recruit.co.jp/hotpepper/gourmet/v1/', {
+  const res = await request('https://webservice.recruit.co.jp/hotpepper/gourmet/v1/', {
     ...mapKeysWith(params || {}, hotpepperParamsMap),
     key: process.env.HOTPEPPER_API_KEY,
     format: 'json',
   })
+
+  if (typeof res === 'string' && res.length === 0) { // TODO:
+    throw createError(404, STATUS_CODES[404], null, null, { _debug: { external: 'HOTPEPPER', message: '`response.body` is empty string' } })
+  }
+
+  const { results } = res
 
   if (Array.isArray(results.error)) {
     const [error] = results.error
