@@ -8,7 +8,7 @@ const { hotpepper: hotpepperParamsMap, gurunavi: gurunaviParamsMap } = require('
 const { hotpepper: hotpepperEntityMap, gurunavi: gurunaviEntityMap } = require('./entity-map')
 
 const request = async (url, params) => {
-  const response = await got(`${url}${stringifyParams(params)}`, { json: true, cache: cacheStore })
+  return await got(`${url}${stringifyParams(params)}`, { json: true, cache: cacheStore, throwHttpErrors: false })
     .catch(error => {
       const codeAndTitle = error.name === 'ParseError'
         ? [500, STATUS_CODES[500]]
@@ -16,8 +16,6 @@ const request = async (url, params) => {
 
       throw createError(...codeAndTitle, error, null, { name: error.name })
     })
-
-  return response.body
 }
 
 module.exports.hotpepper = async params => {
@@ -27,11 +25,13 @@ module.exports.hotpepper = async params => {
     format: 'json',
   })
 
-  if (typeof res === 'string' && res.length === 0) { // TODO:
+  const { body } = res
+
+  if (typeof body === 'string' && body.length === 0) { // TODO:
     throw createError(404, STATUS_CODES[404], null, null, { _debug: { external: 'HOTPEPPER', message: '`response.body` is empty string' } })
   }
 
-  const { results } = res
+  const { results } = body
 
   if (Array.isArray(results.error)) {
     const [error] = results.error
@@ -48,31 +48,32 @@ module.exports.hotpepper = async params => {
   return normalizeRestaurants(results.shop, hotpepperEntityMap)
 }
 
-const shouldHandleGurunaviError = error => {
-  return !!error && [429, 601, 602, 603, 604].includes(error.code)
-}
-
 module.exports.gurunavi = async params => {
   const res = await request('https://api.gnavi.co.jp/RestSearchAPI/v3/', {
     ...mapKeysWith(params || {}, gurunaviParamsMap),
     keyid: process.env.GURUNAVI_API_KEY,
   })
 
-  if (shouldHandleGurunaviError(res.error)) {
-    const { error } = res
-    const statusCode = { '601': 401, '602': 404, '603': 400, '604': 500 }[error.code] || error.code
-    throw createError(
-      statusCode,
-      STATUS_CODES[statusCode],
-      null,
-      null,
-      { detail: error.message }
+  const { statusCode, body } = res
+
+  if (
+    (statusCode >= 200 && statusCode < 300) ||
+    statusCode === 404
+  ) {
+    const restaurants = body.rest || [] // if 404
+    return normalizeRestaurants(
+      normalizeNullValues(restaurants),
+      gurunaviEntityMap
     )
   }
 
-  const restaurants = res.rest || [] // if error become undefined
-  return normalizeRestaurants(
-    normalizeNullValues(restaurants),
-    gurunaviEntityMap
+  const [error] = body.error
+  const code = { '601': 401, '602': 404, '603': 400, '604': 500 }[error.code] || error.code
+  throw createError(
+    code,
+    res.statusMessage,
+    null,
+    null,
+    { detail: error.message }
   )
 }
